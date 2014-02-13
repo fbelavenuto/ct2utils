@@ -1,0 +1,21 @@
+<html>
+<head>
+	<title>ct2utils - bin2ct2 - documentação</title>
+</head>
+<body>
+	<a href="index.html">Índice</a><br />
+	<h1>bin2ct2</h1>
+	<hr />
+	<p>Este utilitário pode ser usado para a criação de um arquivo CT2 à partir de arquivos binários do disco.</p>
+	<p>O arquivo binário pode conter 4 bytes de cabeçalho que indicam o endereço inicial e comprimento do arquivo, no formato utilizado pelo DOS 3.3.</p>
+	<p>A opção '-o &lt;arq&gt;' pode ser usada para escolher o nome do arquivo de saída. Caso essa opção seja omitida o arquivo de saída terá o mesmo nome do arquivo de entrada com o acréscimo da extensão '.ct2'.</p>
+	<p>A opção '-n &lt;nome&gt;' deve ser utilizada para escolher o nome do arquivo no formato do TK2000 (maiúscula, sem espaço e 6 dígitos no máximo) que será apresentado na carga do arquivo no TK2000.</p>
+	<p>A opção '-s &lt;endereço&gt;' pode ser utilizada para indicar o endereço (em hexa) inicial que o arquivo binário deve ser carregado, implica o uso de '-r'.</p>
+	<p>A opção '-e &lt;endereço&gt;' pode ser utilizada para indicar o endereço (em hexa) final que o arquivo binário deve ser carregado, implica o uso de '-r'.</p>
+	<p>A opção '-r' pode ser utilizada para indicar que o arquivo binário não possui 4 bytes de cabeçalho indicando o endereço inicial e comprimento, implica no uso de '-s' e '-e'.</p>
+	<p></p>
+	<h3>Exemplo:</h3>
+	<p>bin2ct2 -o bolo.ct2 -n BOLO bolo.b</p>
+	<p>bin2ct2 -o asteroides.ct2 -n ASTER -r -S 0B00 -E 12FF asteroides.bin</p>
+</body>
+</html>
