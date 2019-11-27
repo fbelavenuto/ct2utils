@@ -15,6 +15,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "version.h"
+#include "functions.h"
 #include "wav.h"
 #include "ct2.h"
 
