@@ -1,34 +1,25 @@
-/*  wav2ct2 - Utilitário para ler arquivos de áudio e interpretar
- *            no formato do TK2000, gerando arquivo .CT2
+/* ct2utils - Utilitarios para manipular arquivos CT2 (Cassete TK2000)
  *
- *  by Fábio Belavenuto - Copyright 2011
+ * Copyright 2011-2020 Fábio Belavenuto
  *
- *  Versão 0.1beta
+ * Este arquivo é distribuido pela Licença Pública Geral GNU.
+ * Veja o arquivo "Licenca.txt" distribuido com este software.
  *
- *  Este arquivo é distribuido pela Licença Pública Geral GNU.
- *  Veja o arquivo "Licenca.txt" distribuido com este software.
- *
- *  ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
+ * ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
  */
 
-/*
- * wav2ct2.c
- *
- *  Created on: 01/05/2011
- *      Author: Fabio Belavenuto
- */
 //#define DEBUG1
 //#define DEBUG2
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "version.h"
 #include "wav.h"
 #include "ct2.h"
 #include "functions.h"
 
 // Definições
-#define VERSAO "0.1"
 #define BIT_LIMIAR  30		// limiar 2 ciclos
 #define CABB_LIMIAR 23		// limiar 1 ciclo
 
@@ -43,7 +34,7 @@ char *arqWav = NULL, *arqCt2 = NULL;
 FILE *fileLog = stdout;
 
 // ============================================================================
-int getLens(FILE *f) {
+static int getLens(FILE *f) {
 	short ub;
 	int c = 0, p = 0, s = 1024576;
 	char sinal, sinalA = -1;
@@ -68,7 +59,7 @@ int getLens(FILE *f) {
 }
 
 // ============================================================================
-int sincroniza() {
+static int sincroniza() {
 	int c, b = 0;
 
 	// espera 16 ciclos do cabecalho B
@@ -106,7 +97,7 @@ int sincroniza() {
 }
 
 // ============================================================================
-int lerByte() {
+static int lerByte() {
 	int i, c;
 	int r = 0;
 
@@ -131,7 +122,7 @@ int lerByte() {
 }
 
 // ============================================================================
-int lerBloco(char *buffer, int len, int *cs) {
+static int lerBloco(char *buffer, int len, int *cs) {
 	int cb = 0, bb;
 	unsigned char b;
 
@@ -149,7 +140,7 @@ int lerBloco(char *buffer, int len, int *cs) {
 }
 
 // =============================================================================
-int salvaArquivosCT2() {
+static int salvaArquivosCT2() {
 	FILE *fileCt2 = NULL, *fileBin = NULL;
 	char arqSaida[127], nomeA[7];
 	char mc, *p, *buffer = NULL;
@@ -263,7 +254,7 @@ int salvaArquivosCT2() {
 }
 
 // =============================================================================
-void mostraUso(char *nomeprog) {
+static void mostraUso(char *nomeprog) {
 	fprintf(stderr, "\n");
 	fprintf(stderr, "%s - Utilitario para interpretar arquivo .wav e converter\n", nomeprog);
 	fprintf(stderr, "     para .ct2, padrao TK2000. Versao %s\n\n", VERSAO);

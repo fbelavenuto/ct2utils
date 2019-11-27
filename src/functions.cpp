@@ -1,8 +1,11 @@
-/*
- * functions.cpp
+/* ct2utils - Utilitarios para manipular arquivos CT2 (Cassete TK2000)
  *
- *  Created on: 24/05/2011
- *      Author: Fabio Belavenuto
+ * Copyright 2011-2020 Fábio Belavenuto
+ *
+ * Este arquivo é distribuido pela Licença Pública Geral GNU.
+ * Veja o arquivo "Licenca.txt" distribuido com este software.
+ *
+ * ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
  */
 
 #include <stdlib.h>
@@ -181,4 +184,16 @@ bool makeCt2File(struct arqTK2000 *arq, char *buffer) {
 		da -= t;
 	}
 	return true;
+}
+
+// =============================================================================
+void imprimeInf(TTKCab *tkcab, TTKEnd *tkend) {
+	int  i;
+	char nome[7];
+
+	for (i=0; i<6; i++)
+		nome[i] = tkcab->Nome[i] & 0x7F;
+	nome[6] = 0;
+	printf("'%s' de 0x%.2X blocos, ", nome, tkcab->TotalBlocos);
+	printf("de 0x%.4X a 0x%.4X\n", tkend->EndInicial, tkend->EndFinal);
 }

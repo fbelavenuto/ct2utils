@@ -1,8 +1,11 @@
-/*
- * wav.h
+/* ct2utils - Utilitarios para manipular arquivos CT2 (Cassete TK2000)
  *
- *  Created on: 01/05/2011
- *      Author: Fabio
+ * Copyright 2011-2020 Fábio Belavenuto
+ *
+ * Este arquivo é distribuido pela Licença Pública Geral GNU.
+ * Veja o arquivo "Licenca.txt" distribuido com este software.
+ *
+ * ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
  */
 
 #ifndef WAV_H_
@@ -14,6 +17,8 @@
 #define FREQBIT0	2000
 #define	FREQBIT1	1000
 #define	FREQCABB	720
+#define TAXAAMOST	44100
+
 
 typedef struct SWaveCab {
 	unsigned char  GroupID[4];		// RIFF

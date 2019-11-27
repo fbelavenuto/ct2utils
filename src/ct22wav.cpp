@@ -1,14 +1,11 @@
-/*  ct22wav - Utilitário para ler arquivo ct2 e gerar áudio para
- *            ser lido no TK2000 pelo cassete
+/* ct2utils - Utilitarios para manipular arquivos CT2 (Cassete TK2000)
  *
- *  by Fábio Belavenuto - Copyright 2011
+ * Copyright 2011-2020 Fábio Belavenuto
  *
- *  Versão 0.1beta
+ * Este arquivo é distribuido pela Licença Pública Geral GNU.
+ * Veja o arquivo "Licenca.txt" distribuido com este software.
  *
- *  Este arquivo é distribuido pela Licença Pública Geral GNU.
- *  Veja o arquivo "Licenca.txt" distribuido com este software.
- *
- *  ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
+ * ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
  */
 
 //#define DEBUG1
@@ -17,21 +14,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "version.h"
 #include "wav.h"
 #include "ct2.h"
 
 // Definições
-#define VERSAO "0.1"
-#define DURSILENP 800			// 800 ms
-#define DURSILENS 500			// 500 ms
-#define DURCABA   1000			//   1 seg
-#define MINCABA   500			// 500 ms
-#define MAXCABA   3000			//   3 seg
-#define TAXAAMOST 44100
 
 // Variáveis
-//unsigned char *buffer = NULL;
-//int  posBuffer        = 0;
 int  DurSilencioP    = DURSILENP;
 int  DurSilencioS    = DURSILENS;
 int  DurCabA         = DURCABA;
@@ -41,7 +30,7 @@ int  totalDados      = 0;
 // Funções
 
 // =============================================================================
-void silencio(FILE *fileWav, int duracaoms) {
+static void silencio(FILE *fileWav, int duracaoms) {
 	int   Total;
 	short *buffer;
 
@@ -54,8 +43,7 @@ void silencio(FILE *fileWav, int duracaoms) {
 }
 
 // =============================================================================
-void tom(FILE *fileWav, int frequencia, int duracaoms)
-{
+static void tom(FILE *fileWav, int frequencia, int duracaoms) {
 	static short Pico = 32767;
 	short *buffer;
 	int   c, i;
@@ -85,23 +73,8 @@ void tom(FILE *fileWav, int frequencia, int duracaoms)
 	free(buffer);
 }
 
-
 // =============================================================================
-void imprimeInf(TTKCab *tkcab, TTKEnd *tkend)
-{
-	int  i;
-	char nome[7];
-
-	for (i=0; i<6; i++)
-		nome[i] = tkcab->Nome[i] & 0x7F;
-	nome[6] = 0;
-	printf("'%s' de 0x%.2X blocos, ", nome, tkcab->TotalBlocos);
-	printf("de 0x%.4X a 0x%.4X\n", tkend->EndInicial, tkend->EndFinal);
-}
-
-// =============================================================================
-void mostraUso(char *nomeprog)
-{
+static void mostraUso(char *nomeprog) {
 	fprintf(stderr, "\n");
 	fprintf(stderr, "%s - Utilitario para gerar arquivo de audio .wav a partir\n", nomeprog);
 	fprintf(stderr, "          do arquivo .ct2 formato TK2000. Versao %s\n\n", VERSAO);
@@ -122,8 +95,7 @@ void mostraUso(char *nomeprog)
 }
 
 // =============================================================================
-int main (int argc, char *argv[])
-{
+int main (int argc, char *argv[]) {
 	int      c = 1, silencioAtual = DurSilencioP;
 	int      pos, comp, cont;
 	char     temp[1024], b, *p;
@@ -199,7 +171,6 @@ int main (int argc, char *argv[])
 		}
 	}
 
-	//
 	if (!(fileCt2 = fopen(arqCt2, "rb"))) {
 		fprintf(stderr, "Erro ao abrir arquivo %s\n", arqCt2);
 		return -1;

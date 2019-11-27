@@ -1,35 +1,26 @@
-/*  bin2ct2 - Utilitário para ler arquivos .b (formato AppleDOS 3.3 tipo B)
- * 				e gerar arquivos .CT2
+/* ct2utils - Utilitarios para manipular arquivos CT2 (Cassete TK2000)
  *
- *  by Fábio Belavenuto - Copyright 2011
+ * Copyright 2011-2020 Fábio Belavenuto
  *
- *  Versão 0.1beta
+ * Este arquivo é distribuido pela Licença Pública Geral GNU.
+ * Veja o arquivo "Licenca.txt" distribuido com este software.
  *
- *  Este arquivo é distribuido pela Licença Pública Geral GNU.
- *  Veja o arquivo "Licenca.txt" distribuido com este software.
- *
- *  ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
- */
-
-/*
- * bin2ct2.cpp
- *
- *  Created on: 25/05/2011
- *      Author: Fabio Belavenuto
+ * ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "version.h"
 #include "wav.h"
 #include "ct2.h"
 #include "functions.h"
 
 // Definições
-#define VERSAO "0.1"
+
 
 // =============================================================================
-void mostraUso(char *nomeprog) {
+static void mostraUso(char *nomeprog) {
 	fprintf(stderr, "\n");
 	fprintf(stderr, "%s - Utilitario para converter arquivos .b (Applesoft DOS 3.3)\n", nomeprog);
 	fprintf(stderr, "     para .ct2, padrao TK2000. Versao %s\n\n", VERSAO);

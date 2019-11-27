@@ -1,17 +1,27 @@
-/*
- * ct2.h
+/* ct2utils - Utilitarios para manipular arquivos CT2 (Cassete TK2000)
  *
- *  Created on: 05/05/2011
- *      Author: Fabio Belavenuto
+ * Copyright 2011-2020 Fábio Belavenuto
+ *
+ * Este arquivo é distribuido pela Licença Pública Geral GNU.
+ * Veja o arquivo "Licenca.txt" distribuido com este software.
+ *
+ * ESTE SOFTWARE NÃO OFERECE NENHUMA GARANTIA
  */
 
 #ifndef CT2_H_
 #define CT2_H_
 
+/* Definicoes */
 #define CT2_MAGIC "CTK2"
 #define CT2_CAB_A "CA\0\0"
 #define CT2_CAB_B "CB\0\0"
 #define CT2_DADOS "DA"
+#define DURSILENP	800			// 800 ms
+#define DURSILENS	500			// 500 ms
+#define DURCABA		1000		//   1 seg
+#define MINCABA		500			// 500 ms
+#define MAXCABA		3000		//   3 seg
+
 
 typedef struct STKCab
 {
