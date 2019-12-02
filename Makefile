@@ -1,8 +1,8 @@
 # Makefile
 
 CC = gcc
-CPP = g++
-CFLAGS = -g -Wall
+LD = gcc
+CFLAGS = -g -Wall -Iinc -I../libct2/inc
 LDFLAGS = 
 CP = cp
 RM = rm -f
@@ -11,35 +11,21 @@ MD = mkdir
 ODIR = obj
 SDIR = src
 
-WCSOURCES=wav2ct2.cpp functions.cpp
-WCOBJECTS=$(addprefix $(ODIR)/, $(WCSOURCES:.cpp=.o))
-WCSRCS=$(addprefix $(SDIR)/, $(WCSOURCES))
+LIBS = ../libct2/libct2.a
 
-CWSOURCES=ct22wav.cpp functions.cpp
-CWOBJECTS=$(addprefix $(ODIR)/, $(CWSOURCES:.cpp=.o))
-CWSRCS=$(addprefix $(SDIR)/, $(CWSOURCES))
+SOURCES = main.c functions.c
+OBJECTS = $(addprefix $(ODIR)/, $(SOURCES:.c=.o))
 
-BCSOURCES=bin2ct2.cpp functions.cpp
-BCOBJECTS=$(addprefix $(ODIR)/, $(BCSOURCES:.cpp=.o))
-BCSRCS=$(addprefix $(SDIR)/, $(BCSOURCES))
+WCSOURCES = wav2ct2.c functions.c
+WCOBJECTS = $(addprefix $(ODIR)/, $(WCSOURCES:.c=.o))
 
-CBSOURCES=ct22bin.cpp functions.cpp
-CBOBJECTS=$(addprefix $(ODIR)/, $(CBSOURCES:.cpp=.o))
-CBSRCS=$(addprefix $(SDIR)/, $(CBSOURCES))
+all: $(ODIR) ct2utils wav2ct2
 
-all: $(ODIR) wav2ct2 ct22wav bin2ct2 ct22bin
+ct2utils: $(OBJECTS)
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 wav2ct2: $(WCOBJECTS)
-	$(CPP) $(LDFLAGS) $(WCOBJECTS) -o $@
-
-ct22wav: $(CWOBJECTS)
-	$(CPP) $(LDFLAGS) $(CWOBJECTS) -o $@
-
-bin2ct2: $(BCOBJECTS)
-	$(CPP) $(LDFLAGS) $(BCOBJECTS) -o $@
-
-ct22bin: $(CBOBJECTS)
-	$(CPP) $(LDFLAGS) $(CBOBJECTS) -o $@
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 $(ODIR):
 	$(MD) $(ODIR)
@@ -51,4 +37,4 @@ $(ODIR)/%.o : $(SDIR)/%.cpp
 	$(CPP) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) wav2ct2 ct22wav bin2ct2 ct22bin *.exe $(ODIR)/* core *~
+	$(RM) ct2utils wav2ct2 *.exe $(ODIR)/* core *~
