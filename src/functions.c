@@ -18,8 +18,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <string.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "ct2.h"
 #include "functions.h"
 
@@ -42,17 +44,31 @@ const struct CHexMap hexMap[hexMapL] = {
 
 // Public functions
 
+/* https://stackoverflow.com/questions/122616/how-do-i-trim-leading-trailing-whitespace-in-a-standard-way */
 /*****************************************************************************/
-char *trim(char *s) {
-	char *ptr;
-	if (!s)
+char *trim(char *str) {
+	char *end;
+
+	if (!str) {
 		return NULL; // handle NULL string
-	if (!*s)
-		return s; // handle empty string
-	for (ptr = s + strlen(s) - 1; (ptr >= s) && (*ptr == ' '); --ptr)
-		;
-	ptr[1] = '\0';
-	return s;
+	}
+	if (!*str) {
+		return str; // handle empty string
+	}
+	// Trim leading space
+	while(isspace((unsigned char)*str)) str++;
+	// All spaces?
+	if(*str == 0) {  
+		return str;
+	}
+	// Trim trailing space
+	end = str + strlen(str) - 1;
+	while(end > str && isspace((unsigned char)*end)) {
+		end--;
+	}
+	// Write new null terminator character
+	end[1] = '\0';
+	return str;
 }
 
 /*****************************************************************************/
@@ -142,4 +158,15 @@ void showInf(struct STKCab *tkcab, struct STKAddr *tkend) {
 	name[6] = 0;
 	printf("'%s' of 0x%.2X blocks, ", name, tkcab->numberOfBlocks);
 	printf("from 0x%.4X to 0x%.4X\n", tkend->initialAddr, tkend->endAddr);
+}
+
+/*****************************************************************************/
+int directoryExists(char *pathname) {
+	struct stat info;
+	if( stat( pathname, &info ) != 0 ) {
+		return 0;
+	} else if( info.st_mode & S_IFDIR ) {
+		return 1;
+	}
+	return 0;
 }

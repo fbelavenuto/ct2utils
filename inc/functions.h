@@ -22,9 +22,10 @@
 
 
 // Prototipes
-char *trim(char *s);
+char *trim(char *str);
 char *withoutExt(const char *s);
 char *onlyPath(const char *s);
 char *cleanFN(char *s);
 int _httoi(char *value);
 void showInf(struct STKCab *tkcab, struct STKAddr *tkend);
+int directoryExists(char *pathname);
