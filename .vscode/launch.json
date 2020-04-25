@@ -10,8 +10,12 @@
             "request": "launch",
             "program": "${workspaceFolder}/ct2utils.exe",
             "args": [
-                "tests\\MontezumaRevenge.ct2",
-                "-l"
+                "tests\\NewFile.ct2",
+                "-i",
+                "-f",
+                "tests\\PITFALLII#0607B0",
+                "-t",
+                "TESTE"
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",

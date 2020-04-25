@@ -4,7 +4,7 @@
       {
         "label": "build with Makefile",
         "type": "shell",
-        "command": "mingw32-make.exe",
+        "command": "make",
         "group": {
           "kind": "build",
           "isDefault": true
@@ -13,7 +13,7 @@
       {
         "label": "Clean",
         "type": "shell",
-        "command": "mingw32-make.exe clean",
+        "command": "make",
         "problemMatcher": []
       }
     ]

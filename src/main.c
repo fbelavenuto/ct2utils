@@ -28,7 +28,8 @@
 
 // Enums
 enum Commands {
-    CMD_LIST = 0,
+    CMD_CREATE = 0,
+    CMD_LIST,
     CMD_EXTRACT,
     CMD_DELETE,
     CMD_INSERT,
@@ -47,6 +48,18 @@ static int sampleRate = 44100;
 static enum WaveFormat waveFormat = WF_SINE;
 
 // Private functions
+
+/*****************************************************************************/
+static void createCommand(char *filename) {
+    FILE              *ct2File;
+
+	if (!(ct2File = fopen(filename, "wb"))) {
+		fprintf(stderr, "Error writing file '%s'.\n", filename);
+		exit(1);
+	}
+    fwrite(CT2_MAGIC, 1, 4, ct2File);
+    fclose(ct2File);
+}
 
 /*****************************************************************************/
 static void listCommand() {
@@ -116,15 +129,27 @@ static void extractCommand() {
 static void deleteCommand(char *filename) {
     FILE              *ct2File;
     struct Tk2kBinary *binary;
-    int               i, bufSize;
+    int               i, bufSize, found;
     char              *buffer;
 
-    if (index == 0) {
-        fprintf(stderr, "Index not informed.");
+    if (index == 0 && NULL == tk2kName) {
+        fprintf(stderr, "Index and TK2000 name not informed.");
         exit(1);
     }
-    if (index < 1 || index > ct2Binaries->numOfBinaries) {
+    if (index < 0 || index > ct2Binaries->numOfBinaries) {
         fprintf(stderr, "Index invalid.");
+        exit(1);
+    }
+    found = 0;
+    for (i = 0; i < ct2Binaries->numOfBinaries; i++) {
+        binary = ct2Binaries->binaries[i];
+        if (memcmp(tk2kName, binary->name, strlen(tk2kName)) == 0) {
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        fprintf(stderr, "TK2000 name not found.");
         exit(1);
     }
 	if (!(ct2File = fopen(filename, "wb"))) {
@@ -134,6 +159,9 @@ static void deleteCommand(char *filename) {
     fwrite(CT2_MAGIC, 1, 4, ct2File);
     for (i = 0; i < ct2Binaries->numOfBinaries; i++) {
         binary = ct2Binaries->binaries[i];
+        if (NULL != tk2kName && memcmp(tk2kName, binary->name, strlen(tk2kName)) == 0) {
+            continue;
+        }
         if (index == (i+1)) {
             continue;
         }
@@ -305,15 +333,16 @@ static void usage(char *progName) {
 	fprintf(stderr, " Usage:\n");
 	fprintf(stderr, "   %s <filename> <command/options>\n\n", progName);
 	fprintf(stderr, " Commands:\n");
+    fprintf(stderr, "  -c                                 - Create a empty CT2.\n");
 	fprintf(stderr, "  -l                                 - List binaries.\n");
 	fprintf(stderr, "  -e [-a|-n index|-f file]           - Extract binaries.\n");
-    fprintf(stderr, "  -d <-n index>                      - Delete one binary.\n");
+    fprintf(stderr, "  -d [-n index|-t name]              - Delete one binary.\n");
     fprintf(stderr, "  -i <-f file> [-a|-n index|-t name] - Insert one binary.\n");
 	fprintf(stderr, "  -w <-f file> [-s sr|-q wf]         - Generate WAV file.\n");
 	fprintf(stderr, " Options for commands:\n");
 	fprintf(stderr, "  -a               - Binary format in TKDOS format.\n");
 	fprintf(stderr, "  -n <index>       - Choose binary with <index> index.\n");
-    fprintf(stderr, "  -f <file>        - Output filename.\n");
+    fprintf(stderr, "  -f <file>        - Input/Output filename.\n");
     fprintf(stderr, "  -t <name>        - TK2000 name.\n");
     fprintf(stderr, "  -s <samplerate>  - Wav samplerate (8000-88200).\n");
     fprintf(stderr, "  -q <wave format> - Wave format (Sine or Square).\n");
@@ -342,6 +371,10 @@ int main(int argc, char *argv[]) {
 		if (argv[c][0] == '-' || argv[c][0] == '/') {
             // Test options/commands with no parameter
 			switch (argv[c][1]) {
+                case 'c':
+                    command = CMD_CREATE;
+                    break;
+
                 case 'l':
                     command = CMD_LIST;
                     break;
@@ -432,7 +465,7 @@ int main(int argc, char *argv[]) {
             strcat(outputDirectory, "/");
         }
     }
-    if (command != CMD_WAVE) {
+    if (command != CMD_WAVE && command != CMD_CREATE) {
         ct2Binaries = readCt2FromFile(filename);
         if (NULL == ct2Binaries) {
             fprintf(stderr, "Error reading file '%s'.\n", filename);
@@ -440,6 +473,10 @@ int main(int argc, char *argv[]) {
         }
     }
     switch (command) {
+        case CMD_CREATE:
+            createCommand(filename);
+            break;
+
         case CMD_LIST:
             listCommand();
             break;
@@ -468,7 +505,7 @@ int main(int argc, char *argv[]) {
     if (NULL != outputFilename) {
         free(outputFilename);
     }
-    if (command != CMD_WAVE) {
+    if (command != CMD_WAVE && command != CMD_CREATE) {
         for (i = 0; i < ct2Binaries->numOfBinaries; i++) {
             struct Tk2kBinary *binary = ct2Binaries->binaries[i];
             free(binary->data);
